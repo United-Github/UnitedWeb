@@ -1,6 +1,7 @@
 var gulp = require('gulp');
 var plumber = require('gulp-plumber');
 var runSequence = require('run-sequence');
+var autoprefixer = require('gulp-autoprefixer');
 
 /* Server
 ****************************** */
@@ -28,9 +29,14 @@ gulp.task('sass', function() {
 		.pipe(plumber())
 		.pipe(sass())
 		.pipe(sass({outputStyle: 'expanded'}))
+		.pipe(autoprefixer({
+			browsers: ['last 2 versions'],
+			cascade: false
+		}))
 		.pipe(gulp.dest('./app/public/css'))
 		.pipe(browser.reload({stream:true}))
 });
+
 
 /* Combine MediaQuery
 ****************************** */
@@ -76,9 +82,9 @@ var copyPaths = [
 /* Copy
 ****************************** */
 gulp.task('copy', function() {
-	for(var i=0; i<copyPaths.length; i++){
-		gulp.src(copyPaths[i].from).pipe(gulp.dest(copyPaths[i].to));
-	}
+	Object.keys(copyPaths).forEach(function (key) {
+		gulp.src(copyPaths[key].from).pipe(gulp.dest(copyPaths[key].to));
+	});
 });
 
 /* Watch
